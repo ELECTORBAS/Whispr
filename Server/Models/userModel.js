@@ -19,11 +19,15 @@ const userSchema = mongoose.Schema({
         type : Boolean,
         default : false
     },
-    authOTP: {
+    OTP: {
+        type : String,
+        default : null
+    },
+    OTP_expire: {
         type : String,
         default : null
     }
-}, {timestamp : true})
+}, { timestamps : true})
 
 const User = mongoose.model("User", userSchema) || mongoose.models.User;
 

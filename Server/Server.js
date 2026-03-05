@@ -21,8 +21,6 @@ app.use(cors({
 
 const PORT = process.env.PORT || 4000;
 
-console.log(process.env.MONGODB_URI);
-
 app.use('/api/auth', router)
 
 app.listen(PORT, () => console.log(`app is running on Port : ${PORT}`))
