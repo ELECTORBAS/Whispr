@@ -132,11 +132,12 @@ export const login = async (req, res) => {
 
 export const logout = (req, res) => {
   try {
-    return res.clearCookie("token", {
+    res.clearCookie("token", {
       httpOnly: true,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       secure: process.env.NODE_ENV === "production",
     });
+    return res.status(200).json({ message: "User logged out successfully" });
   } catch (e) {
     console.error("Error during logout:", e);
     return res
@@ -145,31 +146,42 @@ export const logout = (req, res) => {
   }
 };
 
-export const send_OTP = async (req, res) => {
+export const verify_OTP = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { userId, OTP } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findById(userId);
 
-    if (!user) {
-      return res.status(404).json({ message: "User NOT found" });
+    if(!user){
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      })
+    }
+    
+    if( user.OTP === null || user.OTP !== OTP ){
+      return res.status(401).json({
+        success: false,
+        message: "Invalid OTP. Please try again."
+      })
     }
 
-    // await transporter.sendMail({
-    //   from: process.env.LOGIN,
-    //   to: email,
-    //   subject: "OTP for Whispr",
-    //   html: `
-    //   <h2>Login OTP</h2>
-    //     <p>Your OTP is:</p>
-    //     <h1>${OTP}</h1>
-    //     <p>This code expires in 5 minutes.</p>
-    //   `,
-    // });
+    if(user.OTP_expire < Date.now()){
+      return res.status(400).json({
+        success: false,
+        message: "OTP has expired. Please request a new one."
+      })
+    }
+
+    user.OTP = null;
+    user.OTP_expire = 0;
+    user.isAuthenticated = true;
+
+    await user.save()
 
     return res.status(200).json({
       success: true,
-      message: "OTP sent successfully",
+      message: "OTP verified successfully",
     });
   } catch (e) {
     console.error("Error during OTP sending:", e);

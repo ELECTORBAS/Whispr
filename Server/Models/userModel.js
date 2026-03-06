@@ -24,8 +24,8 @@ const userSchema = mongoose.Schema({
         default : null
     },
     OTP_expire: {
-        type : String,
-        default : null
+        type : Number,
+        default : 0
     }
 }, { timestamps : true})
 
