@@ -1,11 +1,10 @@
 @import 'tailwindcss';
 
 .light-text{
-    @apply text-gray-200;
+    @apply text-[#b8b9bc];
 }
 
 @layer base{
-
     
     main{
         @apply h-dvh w-dvw;
@@ -18,10 +17,10 @@
             }
         }
         #home{
-            @apply bg-slate-800 w-dvw h-dvh text-white p-8 flex justify-center items-center gap-6;
+            @apply bg-slate-800 w-dvw h-dvh text-white px-6 py-16 flex justify-center items-center gap-6;
 
             .right{
-                @apply w-[80%] h-full bg-slate-900 rounded-2xl;
+                @apply md:block w-[80%] h-full bg-slate-900 rounded-2xl ;
             }
             .left{
                 @apply w-[20%] h-full bg-slate-900 rounded-2xl;
