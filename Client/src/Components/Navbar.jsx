@@ -1,8 +1,10 @@
 import userAuthStore from "../Stores/userStore";
 
+import {User, Settings} from "lucide-react" 
+
 const Navbar = () => {
 
-  const { userAuth } = userAuthStore;
+  const userAuth = userAuthStore((state) => state.userAuth)
 
   return (
     <nav>
@@ -11,22 +13,16 @@ const Navbar = () => {
         <h1 className="font-serif font-bold" >Whispr</h1>
       </a>
       <div className="flex gap-4">
-        <a href="/Profile">Profile</a>
-        {/* { !userAuth ? (
-          <a>
-            <a href="/Profile">Profile</a>
-          </>
+        { userAuth ? (
+            <a href="/Profile"> <User /> Profile</a>
           ) : 
           (
           <>
             <a href="/Register">Register</a>
             <a href="/Login">Login</a>
           </>
-        )} */}
-        <a href="/Register">Register</a>
-        <a href="/Login">Login</a>
-          
-          <a href="/Setting">Setting</a>
+        )}
+        <a href="/Setting"><Settings /> Setting </a>
 
       </div>
     </nav>

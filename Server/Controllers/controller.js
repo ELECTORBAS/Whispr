@@ -210,13 +210,39 @@ export const getUserDetail = async (req, res) => {
   }
 } 
 
-export const checkAuth = async () => {
+export const checkAuth = async (req, res) => {
   try {
-    
+    // Try to get userId from req.userId (set by middleware) or req.body.userId
+    const userId = req.userId || req.body.userId;
+
+    if (!userId) {
+      console.error("checkAuth: userId not found. req.userId:", req.userId, "req.body:", req.body);
+      return res.status(401).json({
+        success: false,
+        message: "User ID not found in request"
+      })
+    }
+
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "User authenticated",
+      user: user
+    })
   } catch (e) {
+    console.error("Error during auth check:", e);
     return res.status(500).json({
       success: false,
-      message: "Failed to check user Auth"
+      message: "Failed to check user Auth",
+      error: e.message
     })
   }
 }

@@ -12,7 +12,13 @@ export const getId = async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         if(decoded.id){
-            req.body.userId = decoded.id;
+            // Set userId on req.userId (works for all request types)
+            req.userId = decoded.id;
+            // Also set on req.body if it exists (for POST/PUT requests)
+            if (req.body) {
+                req.body.userId = decoded.id;
+            }
+            next()
         }else{
             return res.status(401).json({
                 success: false,
@@ -20,12 +26,20 @@ export const getId = async (req, res, next) => {
             })
         }
 
-        next()
-
     } catch (e) {
+        // JWT verification errors (expired, invalid token, etc.) should return 401
+        if (e.name === 'JsonWebTokenError' || e.name === 'TokenExpiredError') {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized"
+            })
+        }
+        // Other errors return 500
+        console.error("getId middleware error:", e);
         return res.status(500).json({
-            succes: false,
-            message: "Failed to get user ID"
+            success: false,
+            message: "Failed to get user ID",
+            error: e.message
         })
     }
 }

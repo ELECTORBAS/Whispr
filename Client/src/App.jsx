@@ -15,15 +15,34 @@ import { useEffect } from "react"
 const App = () => {
 
   const userAuth = userAuthStore((state) => state.userAuth);
+  const isCheckingAuth = userAuthStore((state) => state.isCheckingAuth);
   const checkAuth = userAuthStore((state) => state.checkAuth);
 
   useEffect(() => {
-    checkAuth
-  }, [checkAuth])
+    checkAuth().then((user) => {
+      console.log("Auth check completed, userAuth:", user);
+    });
+  }, [])
+
+  // Debug: Log userAuth changes
+  useEffect(() => {
+    console.log("userAuth state changed:", userAuth);
+  }, [userAuth])
+
+  // Show loading state while checking authentication
+  if (isCheckingAuth) {
+    return (
+      <main>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <p>Loading...</p>
+        </div>
+      </main>
+    )
+  }
 
   return (
     <main>
-      <ToastContainer />
+      <ToastContainer toastStyle={{backgroundColor : "black"}}/>
       <Navbar />
       <Routes>
         <Route path="/" element={userAuth ? <Home /> : <Navigate to="/Register" replace />} />

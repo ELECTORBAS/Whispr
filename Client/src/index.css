@@ -6,16 +6,17 @@
 
 @layer base{
 
-    nav{
-        @apply flex justify-between items-center w-full px-4 fixed top-3.5 h-8 bg-blue-300 backdrop-blur-lg z-10;
-
-        .logo{
-            @apply flex justify-center items-center gap-2.5;
-        }
-    }
-
+    
     main{
+        @apply h-dvh w-dvw;
 
+        nav{
+            @apply flex justify-between items-center w-full px-4 fixed top-3.5 h-8 bg-blue-300 backdrop-blur-lg z-10;
+    
+            .logo{
+                @apply flex justify-center items-center gap-2.5;
+            }
+        }
         #home{
             @apply bg-slate-800 w-dvw h-dvh text-white p-8 flex justify-center items-center gap-6;
 
@@ -125,7 +126,11 @@
     
         }
         #setting{
-            @apply w-screen h-dvh bg-slate-800;
+            @apply w-screen h-dvh bg-slate-800 flex justify-center items-center;
+
+            button{
+                @apply border cursor-pointer;
+            }
         }
     }
 }
