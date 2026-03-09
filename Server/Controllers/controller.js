@@ -190,3 +190,33 @@ export const verify_OTP = async (req, res) => {
       .json({ message: "Failed to send OTP", error: e.message });
   }
 };
+
+export const getUserDetail = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    const user = await User.findById(userId).select("-password");
+
+    return res.status(200).json({
+      success: true,
+      message: "User details Fetched successfully",
+      user: user
+    })
+  } catch (e) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to get user details"
+    })
+  }
+} 
+
+export const checkAuth = async () => {
+  try {
+    
+  } catch (e) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to check user Auth"
+    })
+  }
+}
