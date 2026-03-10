@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 
 const userSchema = mongoose.Schema({
-
+    
+    profilePic: {
+        type : String,
+        default: ""
+    },
     name: {
         type : String,
         require : true,
@@ -14,7 +18,8 @@ const userSchema = mongoose.Schema({
     },
     password: {
         type : String,
-        require : true
+        require : true,
+        minlength: 6
     },
     isAuthenticated: {
         type : Boolean,

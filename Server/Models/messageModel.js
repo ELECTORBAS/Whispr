@@ -3,15 +3,23 @@ import mongoose from "mongoose"
 const messageSchema = mongoose.Schema({
 
     senderId: {
-        type : String,
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "User",
         require : true
     },
-    ecieverId: {
-        type : String,
+    recieverId: {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "User",
         require : true
+    },
+    text : {
+        type : String,
+    },
+    img : {
+        type : String,
     }
 }, { timestamps : true})
 
-const Messages = mongoose.model("Messages", messageSchema) || mongoose.models.Messages;
+const Message = mongoose.model("Message", messageSchema);
 
-export default User;
+export default Message;

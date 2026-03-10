@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../Models/userModel.js";
 
 import transporter from "../Config/transporter.js";
+import cloudinary from "../Config/cloudinary.js"
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -231,6 +232,13 @@ export const checkAuth = async (req, res) => {
         message: "User not found"
       })
     }
+    if(user.isAuthenticated !== true){
+      return res.status(400).json({
+        success: false,
+        message: "User NOT Authenticated"
+      })
+
+    }
 
     return res.status(200).json({
       success: true,
@@ -244,5 +252,24 @@ export const checkAuth = async (req, res) => {
       message: "Failed to check user Auth",
       error: e.message
     })
+  }
+}
+
+export const updateProfile = async ( req, res ) => {
+  try {
+    const { profilePic, userId } = req.body;
+
+    if( !profilePic ) {
+      return res.status(400).json({ message: "Profile pic not provided"})
+    }
+
+    const uploadResponse = await cloudinary.uploader.upload(profilePic)
+    const updatedUser = await User.findByIdAndUpdate( userId, {profilePic:uploadResponse.secure_url}, {new : true})
+
+    res.status(200).json(updatedUser)
+
+  } catch (e) {
+    console.log("Error in updateProfile", e.message);
+    
   }
 }
